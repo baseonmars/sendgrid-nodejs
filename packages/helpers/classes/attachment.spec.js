@@ -93,3 +93,41 @@ describe('setContent()', function() {
     expect(attachment.content).to.be.a('string');
   });
 });
+
+  // toJSON
+  describe('toJSON()', function() {
+    let attachment;
+
+    beforeEach(function() {
+      attachment = new Attachment({
+        filename: 'attachment.txt',
+        type: 'plain/text',
+        disposition: 'attachment',
+        contentId: 'myattachment',
+        content: 'SGVsbG8gV29ybGQK',
+      });
+    });
+
+    it('should return a JSON object with snake_case keys', function() {
+      const json = attachment.toJSON();
+      expect(json).to.deep.equal({
+        content: 'SGVsbG8gV29ybGQK',
+        filename: 'attachment.txt',
+        type: 'plain/text',
+        disposition: 'attachment',
+        content_id: 'myattachment',
+      });
+    });
+
+    it('should omit undefined properties in the JSON object', function() {
+      attachment = new Attachment({
+        filename: 'attachment.txt',
+        content: 'SGVsbG8gV29ybGQK',
+      });
+      const json = attachment.toJSON();
+      expect(json).to.deep.equal({
+        content: 'SGVsbG8gV29ybGQK',
+        filename: 'attachment.txt',
+      });
+    });
+  });
